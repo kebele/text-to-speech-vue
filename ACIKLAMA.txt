@@ -1,0 +1,48 @@
+TEXT TO SPEECH with VUE.js 
+by Gokhan KANDEMIR
+
+açıklama notları
+
+repolar
+https://github.com/gkandemi/vue-text-to-speech
+https://github.com/gkandemi/vue-text-to-speech/tree/master/javascript_version
+
+******
+kurulum,
+temizlik,
+css import,
+template monte,
+
+* yazıyı okuyacak sesleri alacağımız API işlerini yapalım, speechsynthesis kütüphanesine ulaşalım, bu zaten bir window nesnesi,
+https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis
+şimdi biz bunu tts e atayalım ve buradaki voices leri almaya çalışalım, burada bazen alırız bazen alamayız, bunun önüne geçmek için birpromise kuracağız bu promise bir interval içinde sürekli bu verileri çekmeye çalışsın, çekebildiğinde ( çektiğini nasıl anlayacak bu vioces bir array yapısında bu arrayin uznluğu 0 dan büyük olduğunda...) bunu alsın yani resolv etsin ve tts e atsın ve sonrasında bu interval dursun. durdurmak için bu intervali bir değişkene eşitleyelim, resolve olduğunda bu değişken ismi ile dursun.
+
+* promise dan tts yi aldık, bunu created da voiceList'e atalım ve select de optionları v-for ile bu voiceListten çekelim,
+
+* select e de v-model koyalım selectedVoice deyip option da seçtiğimizi alalım,
+
+* şimdi sayfa yüklendiğinde bir sesin (türkçe olan yelda) default seiçili olması ( aslında bunu direk selectedVoice değerini null değilde bunu atasak ???) hemen hemen aynısı oldu...
+
+* butona speak() ata, bu konuşmayı yapan method SpeechSynthesisUtterance bu konuşacağı metni bekliyor, o da bizim textarea'daki yazdığımız şey, v-model = textToSpeech verdik, bu methodun diğer beklediği hangi ses ile seslendirecek onun içinde vuiceListteki istediğimiz sesin nesnesnin tamamını ona yollamamız lazım, sonra bunu tts.speak(...) a vereceğiz, konuşacak
+
+* konuşma hızı, data da speed tanımlayalım, ve hız inputuna bunu bağlayalım (v-model), stepini ayarlayalım, ref="speed" şeklinde bir ref verdik ki buna script tarafından ulaşabilelim, 
+  mounted() {
+    this.$refs.speed.step = 0.5;
+  },
+  bu ref sanki vanilla js deki docuemnt.queryselector("xx") gibi bir şey, 
+  şimdi bu speed i speak()'e ekleyelim,
+
+  * karaoke kısmına gelelim, metni okurken okuduğu kelimeyi boyamak; textToSpeech'i önce template de aktaralım, 
+yine bu api nin bir özelliği onboundry, bu bize kelimeleri veriyor gibi, ve başladığı karakterin yerini veriyor, başladığı yer 0 mesela kelime 5 harfli ikinci kelimenin başladığı yer 6 gibi, yani kelime kelime alabiliyoruz, şimdi bizm alttaki textToSpeech yaptığımız ifadeyi bir array yapıp o şekilde ilerlemeemiz lazım ki array'in her elamnı için sırası geldiğinde class ile karaoke özelliği verelim, textToSpeech i split ile array yapıp onu ekrana o şekil alıp konuşulan kelimeye göre css ile renk alsın ...
+
+* burada ref ile konuşulan kelimeyi bulmak için index kullanacağız, ref ile işaretledik, şimdi bu index'i de onBoundary ye yollayalım, olmadı, bize aslında elimizdeki kelimenin bu arraydeki kaçıncı indexte old lazım, gerisi style eklemek
+
+ this.$refs[`spoken_word_${wordIndex}`][0].classList.add("spoken_word");
+
+
+
+* geçmiş olsun, 
+* sonraki levelde başarılar
+
+
+
